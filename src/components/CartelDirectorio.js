@@ -1,0 +1,111 @@
+const items = [
+  "Aulas 5, 6, 7",
+  "Apoyo Informático",
+  "Servidores",
+  "Laboratorio 1 y 2",
+  "Coordinación<br>Informática Empresarial",
+];
+
+class CartelDirectorio extends HTMLElement {
+  connectedCallback() {
+    this.render();
+    this.#animateRows();
+  }
+
+  get #filas() {
+    return items.map((label, i) => /* html */`
+      <div class="fila" style="animation-delay: ${0.2 + i * 0.15}s">
+        <span>${label}</span>
+        <span class="flecha">→</span>
+      </div>
+    `).join("");
+  }
+
+  render() {
+    this.setHTMLUnsafe(/* html */`
+      <style>
+        @scope {
+          :scope {
+            display: block;
+            width: 340px;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 8px 28px rgba(0,0,0,0.4);
+            animation: fadeUp 0.6s ease both;
+          }
+
+          .filas {
+            display: grid;
+            background: #1b2f72;
+          }
+
+          .fila {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 14px 20px;
+            border-bottom: 1px solid rgba(255,255,255,0.15);
+            color: #dce4f5;
+            font-size: 1rem;
+            gap: 12px;
+            cursor: default;
+            opacity: 0;
+            transform: translateX(-16px);
+            animation: slideRight 0.4s ease forwards;
+            transition: background 0.2s;
+          }
+
+          .fila:last-child { border-bottom: none; }
+          .fila:hover { background: rgba(255,255,255,0.07); }
+
+          .flecha {
+            font-size: 1.1rem;
+            font-weight: bold;
+            flex-shrink: 0;
+            transition: transform 0.2s;
+          }
+
+          .fila:hover .flecha { transform: translateX(5px); }
+
+          .footer {
+            background: linear-gradient(to right, #b0bac8, #d4dce8, #b0bac8);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 12px;
+            animation: fadeUp 0.5s 1s ease both;
+            opacity: 0;
+          }
+
+          .footer img {
+            height: 40px;
+            object-fit: contain;
+          }
+
+          @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to   { opacity: 1; transform: translateY(0); }
+          }
+
+          @keyframes slideRight {
+            from { opacity: 0; transform: translateX(-16px); }
+            to   { opacity: 1; transform: translateX(0); }
+          }
+        }
+      </style>
+
+      <div class="filas">
+        ${this.#filas}
+      </div>
+      <div class="footer">
+        <img src="logo-ucr.png" alt="Logo UCR">
+      </div>
+    `);
+  }
+
+  #animateRows() {
+    // La animación ya la maneja CSS con animation-delay
+  }
+}
+
+customElements.define("cartel-directorio", CartelDirectorio);
